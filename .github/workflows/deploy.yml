@@ -10,61 +10,43 @@ env:
   MONGODB_DB_NAME: mongodb
 jobs:
   test:
-    environment: testing
     env:
-      MONGODB_CONNECTION_PROTOCOL: mongodb
-      MONGODB_CLUSTER_ADDRESS: mongodb
-      MONGODB_USERNAME: ${{ secrets.MONGODB_USER }}
-      MONGODB_PASSWORD: ${{ secrets.MONGODB_PASSWORD }}
+      MONGODB_CLUSTER_ADDRESS: 'cluster0.yljp0vj.mongodb.net'
+      MONGODB_USERNAME: gusaindb
+      MONGODB_PASSWORD: FnPuQtcuBbdxyibV
+      PORT: 3000
+     
 
-      PORT: 8080
+
     runs-on: ubuntu-latest
-    # container: 
-    #   image: node:18
-
-    # starting services
-    services:
-      mongodb:
-        image: mongo
-        env:
-          MONGO_INITDB_ROOT_USERNAME: ${{ secrets.MONGODB_USER }}
-          MONGO_INITDB_ROOT_PASSWORD: ${{ secrets.MONGODB_PASSWORD }}
-        ports:
-          - 27017:27017
     steps:
-      - name: Get Code
-        uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v6
+       
       - name: Cache dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v5
         with:
           path: ~/.npm
-          key: npm-deps-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
       - name: Install dependencies
-        run: npm install
-      - name: Wait for MongoDB
-        run: |
-          for i in {1..15}; do
-            nc -z localhost 27017 && echo "MongoDB is ready" && exit 0
-            echo "Waiting for MongoDB..."
-            sleep 2
-          done
-          echo "MongoDB did not start in time"
-          exit 1
-      - name: Run server
-        run: npm start & npx wait-on http://127.0.0.1:$PORT
+        run: npm i
+      - name: Run Server
+        run: npm start & npx wait-on http://localhost:$PORT
       - name: Run tests
         run: npm test
-        # value showing from repo environment secret
       - name: Output information
         run: |
           echo "MONGODB_USERNAME: ${{ env.MONGODB_USERNAME }}"
-          echo "MONGODB_DBNAME: ${{ env.MONGODB_DB_NAME }}"
+          echo "MONGODB_PASSWORD: ${{ env.MONGODB_PASSWORD }}"
+          echo "MONGODB_CLUSTER_ADDRESS: ${{ env.MONGODB_CLUSTER_ADDRESS }}"
+          echo "MONGODB_DB_NAME: ${{ env.MONGODB_DB_NAME }}"
+
   deploy:
     needs: test
     runs-on: ubuntu-latest
     steps:
-      - name: Output information
-        run: |        
+      - name: OUtput information
+        run: |
           echo "MONGODB_USERNAME: ${{ env.MONGODB_USERNAME }}"
-          echo "MONGODB_DBNAME: ${{ env.MONGODB_DB_NAME }}"
-          echo "MONGODB_PASSWORD: ${{ env.MONGODB_PASSWORD }}"
+          echo "MONGODB_DB_NAME: ${{ env.MONGODB_DB_NAME }}"
+          
