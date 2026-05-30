@@ -25,7 +25,7 @@ try {
   console.log('Ping Successful!');
 
 } catch (error) {
-  console.log('Oops! Connection failed.');
+  console.log('Oops! Connection failed.',err);
   process.exit(1);
 }
 
