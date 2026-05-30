@@ -12,8 +12,8 @@ jobs:
   test:
     env:
       MONGODB_CLUSTER_ADDRESS: 'cluster0.yljp0vj.mongodb.net'
-      MONGODB_USERNAME: gusaindb
-      MONGODB_PASSWORD: FnPuQtcuBbdxyibV
+      MONGODB_USERNAME: ${{secrets.MONGODB_USERNAME}}
+      MONGODB_PASSWORD: ${{secrets.MONGODB_PASSWORD}}
       PORT: 3000
      
 
