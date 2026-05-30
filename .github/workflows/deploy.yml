@@ -31,7 +31,7 @@ jobs:
       - name: Install dependencies
         run: npm i
       - name: Run Server
-        run: npm start & npx wait-on http://localhost:$PORT
+        run: npm start & npx wait-on http://127.0.0.1:$PORT
       - name: Run tests
         run: npm test
       - name: Output information
