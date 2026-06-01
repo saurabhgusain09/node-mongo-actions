@@ -19,6 +19,8 @@ jobs:
 
 
     runs-on: ubuntu-latest
+    containers:
+      image: node:18
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
